@@ -9,6 +9,7 @@ const CollectionCard = ({
   onEdit, 
   onDelete, 
   onDuplicate,
+  onViewComparison = () => {},
   productCount = 0,
   className = "" 
 }) => {
@@ -30,7 +31,7 @@ const getTemplateIcon = (template) => {
     return 'Grid3X3';
   };
 
-  const isComparisonTemplate = template?.includes('Comparison') || template?.includes('Wirecutter');
+const isComparisonTemplate = collection.template?.includes('Comparison') || collection.template?.includes('Wirecutter');
 
   const handleViewComparison = (e) => {
     e.stopPropagation();
