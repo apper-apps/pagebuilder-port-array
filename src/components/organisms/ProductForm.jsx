@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ImageUpload from "@/components/atoms/ImageUpload";
 import Input from "@/components/atoms/Input";
 import Textarea from "@/components/atoms/Textarea";
 import Button from "@/components/atoms/Button";
 import ApperIcon from "@/components/ApperIcon";
 
 const ProductForm = ({ onFormChange, selectedTemplate, initialData = {} }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     productName: "",
     description: "",
     price: "",
     keyFeatures: [""],
+    images: [],
     ...initialData
   });
 
   const [errors, setErrors] = useState({});
-
+const handleImageChange = (images) => {
+    const updatedData = { ...formData, images };
+    setFormData(updatedData);
+    onFormChange && onFormChange(updatedData);
+  };
   useEffect(() => {
     onFormChange(formData);
   }, [formData, onFormChange]);
@@ -51,7 +57,12 @@ const ProductForm = ({ onFormChange, selectedTemplate, initialData = {} }) => {
       handleInputChange("keyFeatures", newFeatures);
     }
   };
-
+<ImageUpload
+          images={formData.images}
+          onChange={handleImageChange}
+          maxImages={5}
+          error={formData.images?.length === 0 ? "At least one product image is required" : ""}
+        />
   const validateForm = () => {
     const newErrors = {};
     
@@ -122,7 +133,7 @@ const ProductForm = ({ onFormChange, selectedTemplate, initialData = {} }) => {
           onChange={(e) => handleInputChange("price", e.target.value)}
           error={errors.price}
           required
-        />
+/>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">

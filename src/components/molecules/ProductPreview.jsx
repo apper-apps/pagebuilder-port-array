@@ -3,15 +3,24 @@ import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
 const ProductPreview = ({ formData, template = "basic" }) => {
-  const { productName, description, price, keyFeatures = [] } = formData;
+  const { productName, description, price, keyFeatures = [], images = [] } = formData;
+  const primaryImage = images.find(img => img.isPrimary) || images[0];
 
   const BasicTemplate = () => (
-    <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-      <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-        <div className="text-center">
-          <ApperIcon name="Image" size={48} className="text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500 text-sm">Product Image</p>
-        </div>
+<div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+      <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
+        {primaryImage ? (
+          <img 
+            src={primaryImage.dataUrl} 
+            alt={productName || "Product"} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-center">
+            <ApperIcon name="Image" size={48} className="text-gray-400 mx-auto mb-2" />
+            <p className="text-gray-500 text-sm">Product Image</p>
+          </div>
+        )}
       </div>
       
       <div className="p-6">
@@ -68,12 +77,38 @@ const ProductPreview = ({ formData, template = "basic" }) => {
       </div>
       
       <div className="p-6">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
-            <div className="text-center">
-              <ApperIcon name="Image" size={64} className="text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500">Premium Product Image</p>
+<div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            {/* Primary Image */}
+            <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
+              {primaryImage ? (
+                <img 
+                  src={primaryImage.dataUrl} 
+                  alt={productName || "Product"} 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="text-center">
+                  <ApperIcon name="Image" size={64} className="text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-500">Premium Product Image</p>
+                </div>
+              )}
             </div>
+            
+            {/* Additional Images */}
+            {images.length > 1 && (
+              <div className="grid grid-cols-3 gap-2">
+                {images.slice(1, 4).map((image, index) => (
+                  <div key={image.id} className="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                    <img 
+                      src={image.dataUrl} 
+                      alt={`${productName} ${index + 2}`} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="space-y-6">

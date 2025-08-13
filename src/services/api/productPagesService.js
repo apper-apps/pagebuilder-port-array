@@ -21,12 +21,13 @@ class ProductPagesService {
     return { ...item };
   }
 
-  async create(item) {
+async create(item) {
     await delay(400);
     const maxId = Math.max(...this.data.map(item => item.Id), 0);
     const newItem = {
       ...item,
       Id: maxId + 1,
+      images: item.images || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -34,7 +35,7 @@ class ProductPagesService {
     return { ...newItem };
   }
 
-  async update(id, data) {
+async update(id, data) {
     await delay(350);
     const index = this.data.findIndex(item => item.Id === parseInt(id));
     if (index === -1) {
@@ -44,6 +45,7 @@ class ProductPagesService {
       ...this.data[index],
       ...data,
       Id: parseInt(id),
+      images: data.images || this.data[index].images || [],
       updatedAt: new Date().toISOString()
     };
     this.data[index] = updatedItem;

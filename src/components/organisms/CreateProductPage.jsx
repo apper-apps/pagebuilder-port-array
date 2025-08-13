@@ -13,11 +13,12 @@ const CreateProductPage = ({ onBack }) => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState("template");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     productName: "",
     description: "",
     price: "",
-    keyFeatures: [""]
+    keyFeatures: [""],
+    images: []
   });
   const [showTemplateModal, setShowTemplateModal] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,7 +35,7 @@ const CreateProductPage = ({ onBack }) => {
 
   const handleSave = async (status = "draft") => {
     // Validate form
-    if (!formData.productName.trim()) {
+if (!formData.productName.trim()) {
       toast.error("Product name is required");
       return;
     }
@@ -49,21 +50,30 @@ const CreateProductPage = ({ onBack }) => {
       return;
     }
 
+    if (!formData.images || formData.images.length === 0) {
+      toast.error("At least one product image is required");
+      return;
+    }
     try {
       setSaving(true);
       
-      const pageData = {
+const pageData = {
         name: formData.productName,
         template: selectedTemplate.name,
         productName: formData.productName,
         description: formData.description,
         price: parseFloat(formData.price),
         keyFeatures: formData.keyFeatures.filter(feature => feature.trim()),
+        images: formData.images.map(img => ({
+          id: img.id,
+          name: img.name,
+          dataUrl: img.dataUrl,
+          isPrimary: img.isPrimary
+        })),
         status: status,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
-
       await productPagesService.create(pageData);
       
       toast.success(status === "published" ? "Product page published successfully!" : "Product page saved as draft");
@@ -75,13 +85,15 @@ const CreateProductPage = ({ onBack }) => {
     }
   };
 
-  const isFormValid = () => {
+const isFormValid = () => {
     return (
       formData.productName.trim() &&
       formData.description.trim() &&
       formData.price &&
       !isNaN(parseFloat(formData.price)) &&
-      parseFloat(formData.price) > 0
+      parseFloat(formData.price) > 0 &&
+      formData.images &&
+      formData.images.length > 0
     );
   };
 
