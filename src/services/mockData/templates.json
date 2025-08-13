@@ -1,0 +1,35 @@
+[
+  {
+    "Id": 1,
+    "name": "Basic Product Template",
+    "type": "basic",
+    "preview": "/preview-basic.jpg",
+    "layout": {
+      "sections": [
+        "hero",
+        "description",
+        "features",
+        "cta"
+      ],
+      "style": "minimal"
+    }
+  },
+  {
+    "Id": 2,
+    "name": "Advanced High-Ticket Template",
+    "type": "advanced",
+    "preview": "/preview-advanced.jpg",
+    "layout": {
+      "sections": [
+        "hero",
+        "value_proposition",
+        "features",
+        "social_proof",
+        "pricing",
+        "guarantee",
+        "cta"
+      ],
+      "style": "premium"
+    }
+  }
+]

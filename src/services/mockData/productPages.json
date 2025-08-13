@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 1,
+    "name": "Premium Wireless Headphones",
+    "template": "Advanced High-Ticket Template",
+    "productName": "Premium Wireless Headphones",
+    "description": "Experience superior sound quality with our flagship wireless headphones. Featuring active noise cancellation, 30-hour battery life, and premium materials for the ultimate listening experience.",
+    "price": 299.99,
+    "keyFeatures": [
+      "Active Noise Cancellation",
+      "30-hour battery life",
+      "Premium leather design",
+      "High-resolution audio",
+      "Quick charge technology"
+    ],
+    "status": "published",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-20T14:45:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Smart Fitness Tracker",
+    "template": "Basic Product Template",
+    "productName": "Smart Fitness Tracker",
+    "description": "Track your fitness journey with our advanced smartwatch. Monitor heart rate, track workouts, and stay connected with smart notifications.",
+    "price": 149.99,
+    "keyFeatures": [
+      "Heart rate monitoring",
+      "GPS tracking",
+      "7-day battery life",
+      "Water resistant",
+      "Smart notifications"
+    ],
+    "status": "published",
+    "createdAt": "2024-01-12T09:15:00Z",
+    "updatedAt": "2024-01-18T16:20:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Organic Coffee Blend",
+    "template": "Basic Product Template",
+    "productName": "Organic Coffee Blend",
+    "description": "Discover the perfect morning brew with our carefully crafted organic coffee blend. Sourced from sustainable farms and roasted to perfection.",
+    "price": 24.99,
+    "keyFeatures": [
+      "100% organic beans",
+      "Fair trade certified",
+      "Medium roast profile",
+      "Freshly roasted weekly",
+      "Sustainable packaging"
+    ],
+    "status": "draft",
+    "createdAt": "2024-01-10T11:00:00Z",
+    "updatedAt": "2024-01-10T11:00:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Professional Camera Lens",
+    "template": "Advanced High-Ticket Template",
+    "productName": "Professional Camera Lens",
+    "description": "Capture stunning images with our professional-grade 85mm portrait lens. Perfect for portraits, events, and creative photography with beautiful bokeh effects.",
+    "price": 899.99,
+    "keyFeatures": [
+      "85mm focal length",
+      "f/1.4 maximum aperture",
+      "Weather sealed construction",
+      "Fast autofocus",
+      "Professional build quality"
+    ],
+    "status": "published",
+    "createdAt": "2024-01-08T13:30:00Z",
+    "updatedAt": "2024-01-19T10:15:00Z"
+  },
+  {
+    "Id": 5,
+    "name": "Ergonomic Office Chair",
+    "template": "Basic Product Template",
+    "productName": "Ergonomic Office Chair",
+    "description": "Transform your workspace with our ergonomic office chair. Designed for comfort and productivity with adjustable features and premium materials.",
+    "price": 399.99,
+    "keyFeatures": [
+      "Lumbar support",
+      "Adjustable armrests",
+      "Breathable mesh back",
+      "Height adjustment",
+      "5-year warranty"
+    ],
+    "status": "draft",
+    "createdAt": "2024-01-05T15:45:00Z",
+    "updatedAt": "2024-01-16T09:30:00Z"
+  }
+]
