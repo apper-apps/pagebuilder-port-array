@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import SpecificationsBuilder from "@/components/organisms/SpecificationsBuilder";
 import ApperIcon from "@/components/ApperIcon";
+import SpecificationsBuilder from "@/components/organisms/SpecificationsBuilder";
 import TemplateCustomizer from "@/components/organisms/TemplateCustomizer";
 import Button from "@/components/atoms/Button";
 import Textarea from "@/components/atoms/Textarea";
@@ -13,7 +13,8 @@ const ProductForm = ({
   templateCustomization,
   initialData = {},
   showCustomizer = false,
-  onCustomizationChange
+  onCustomizationChange,
+  onExport
 }) => {
 
 const [formData, setFormData] = useState({
@@ -155,6 +156,33 @@ const handleSpecificationsChange = (specifications) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+};
+
+const handleExport = () => {
+    if (!validateForm()) {
+      if (typeof window !== 'undefined' && window.toast) {
+        window.toast.error("Please fix the form errors before exporting");
+      }
+      return;
+    }
+
+    if (onExport) {
+      // Create a temporary page object with current form data
+      const currentPageData = {
+        productName: formData.productName,
+        description: formData.description,
+        price: formData.price,
+        features: formData.keyFeatures || [],
+        specifications: formData.specifications || [],
+        images: formData.images || []
+      };
+      onExport(currentPageData);
+    } else {
+      // Default export behavior - could show a modal or copy to clipboard
+      if (typeof window !== 'undefined' && window.toast) {
+        window.toast.info("Export functionality not configured");
+      }
+    }
   };
 
   return (
@@ -363,6 +391,24 @@ const handleSpecificationsChange = (specifications) => {
                 Your page preview updates automatically as you type. Check the preview panel 
                 to see how your product page will look to customers.
               </p>
+</div>
+
+            {/* Export Section */}
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Export Code</h3>
+                  <p className="text-sm text-gray-600">Generate HTML/CSS code for your product page</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleExport}
+                  icon="Code2"
+                >
+                  Export Code
+                </Button>
+              </div>
             </div>
           </form>
         </>

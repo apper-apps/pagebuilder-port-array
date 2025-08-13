@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
+import React from "react";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
-const ProductCard = ({ page, onEdit, onDelete, onView }) => {
+const ProductCard = ({ page, onEdit, onDelete, onView, onExport }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "published": return "bg-emerald-100 text-emerald-800";
@@ -52,7 +53,7 @@ const ProductCard = ({ page, onEdit, onDelete, onView }) => {
         </div>
       </div>
       
-      <div className="flex items-center gap-2">
+<div className="flex items-center gap-2">
         <Button
           variant="outline"
           size="sm"
@@ -68,6 +69,14 @@ const ProductCard = ({ page, onEdit, onDelete, onView }) => {
           size="sm"
           onClick={() => onEdit(page)}
           icon="Edit2"
+        />
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onExport(page)}
+          icon="Code2"
+          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
         />
         
         <Button
