@@ -20,7 +20,8 @@ const [formData, setFormData] = useState({
     description: "",
     price: "",
     keyFeatures: [""],
-    images: [],
+images: [],
+    specifications: [],
     generatedContent: {
       seoDescription: "",
       featureSections: [],
@@ -82,11 +83,12 @@ const pageData = {
         price: parseFloat(formData.price),
         keyFeatures: formData.keyFeatures.filter(feature => feature.trim()),
         images: formData.images.map(img => ({
-          id: img.id,
+id: img.id,
           name: img.name,
           dataUrl: img.dataUrl,
           isPrimary: img.isPrimary
         })),
+        specifications: formData.specifications || [],
         generatedContent: formData.generatedContent,
         status: status,
         createdAt: new Date().toISOString(),

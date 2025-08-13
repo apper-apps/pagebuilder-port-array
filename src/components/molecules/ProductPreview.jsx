@@ -3,7 +3,7 @@ import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
 const ProductPreview = ({ formData, template = "basic", templateCustomization }) => {
-  const { productName, description, price, keyFeatures = [], images = [], generatedContent = {} } = formData;
+const { productName, description, price, keyFeatures = [], images = [], specifications = [], generatedContent = {} } = formData;
   const primaryImage = images.find(img => img.isPrimary) || images[0];
 
   // Get customization settings
@@ -20,13 +20,13 @@ const ProductPreview = ({ formData, template = "basic", templateCustomization })
   };
 
   const visibleSections = templateCustomization?.sections?.filter(s => s.visible)?.map(s => s.id) || 
-    ["hero", "description", "features", "cta"];
+["hero", "description", "features", "specifications", "pricing", "cta"];
 
   const sectionOrder = templateCustomization?.sections?.sort((a, b) => a.order - b.order)?.map(s => s.id) || 
-    ["hero", "description", "features", "cta"];
+    ["hero", "description", "features", "specifications", "pricing", "cta"];
 
   // Helper function to render sections in order
-  const renderSection = (sectionId) => {
+const renderSection = (sectionId) => {
     if (!visibleSections.includes(sectionId)) return null;
 
     switch (sectionId) {
@@ -115,6 +115,91 @@ const ProductPreview = ({ formData, template = "basic", templateCustomization })
         }
         return null;
 
+      case "specifications":
+        if (specifications.length > 0) {
+          const groupedSpecs = specifications.reduce((groups, spec) => {
+            const key = `${spec.type}-${spec.category}`;
+            if (!groups[key]) {
+              groups[key] = {
+                type: spec.type,
+                category: spec.category,
+                specs: []
+              };
+            }
+            groups[key].specs.push(spec);
+            return groups;
+          }, {});
+
+          const getTypeIcon = (type) => {
+            const icons = {
+              general: "Info",
+              dimensions: "Ruler",
+              technical: "Settings",
+              package: "Package"
+            };
+            return icons[type] || "Info";
+          };
+
+          return (
+            <div key="specifications" className="mb-6">
+              <h3 
+                className="font-semibold mb-4"
+                style={{ color: customColors.text, fontFamily: customFonts.heading }}
+              >
+                Specifications
+              </h3>
+              <div className="space-y-4">
+                {Object.values(groupedSpecs).map((group, index) => (
+                  <div 
+                    key={`${group.type}-${group.category}`}
+                    className="border border-gray-200 rounded-lg overflow-hidden"
+                  >
+                    <div 
+                      className="px-4 py-3 border-b border-gray-200"
+                      style={{ backgroundColor: `${customColors.primary}05` }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <ApperIcon 
+                          name={getTypeIcon(group.type)} 
+                          size={16} 
+                          style={{ color: customColors.primary }}
+                        />
+                        <h4 
+                          className="font-medium"
+                          style={{ color: customColors.text, fontFamily: customFonts.heading }}
+                        >
+                          {group.category}
+                        </h4>
+                      </div>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                      {group.specs.map((spec, specIndex) => (
+                        <div key={spec.id} className="px-4 py-3">
+                          <div className="flex justify-between items-center">
+                            <span 
+                              className="text-sm font-medium"
+                              style={{ color: customColors.text, fontFamily: customFonts.body }}
+                            >
+                              {spec.name}
+                            </span>
+                            <span 
+                              className="text-sm"
+                              style={{ color: customColors.text, fontFamily: customFonts.body }}
+                            >
+                              {spec.value}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+        return null;
+
       case "pricing":
         return (
           <div key="pricing" className="flex items-baseline gap-4 mb-6">
@@ -162,7 +247,7 @@ const BasicTemplate = () => (
         {sectionOrder.map(sectionId => renderSection(sectionId))}
         
         {/* Use Cases */}
-        {visibleSections.includes("specifications") && generatedContent.useCases && generatedContent.useCases.length > 0 && (
+{visibleSections.includes("usecases") && generatedContent.useCases && generatedContent.useCases.length > 0 && (
           <div className="mb-6">
             <h3 
               className="font-semibold mb-3"
@@ -349,7 +434,7 @@ const AdvancedTemplate = () => (
               </div>
             )}
 
-            {sectionOrder.filter(id => visibleSections.includes(id) && ['features'].includes(id)).map(sectionId => renderSection(sectionId))}
+{sectionOrder.filter(id => visibleSections.includes(id) && ['features', 'specifications'].includes(id)).map(sectionId => renderSection(sectionId))}
 
             {/* Key Selling Points */}
             {visibleSections.includes("social_proof") && generatedContent.sellingPoints && generatedContent.sellingPoints.length > 0 && (

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import SpecificationsBuilder from "@/components/organisms/SpecificationsBuilder";
 import ApperIcon from "@/components/ApperIcon";
+import TemplateCustomizer from "@/components/organisms/TemplateCustomizer";
 import Button from "@/components/atoms/Button";
 import Textarea from "@/components/atoms/Textarea";
 import ImageUpload from "@/components/atoms/ImageUpload";
 import Input from "@/components/atoms/Input";
-import TemplateCustomizer from "@/components/organisms/TemplateCustomizer";
 const ProductForm = ({ 
   onFormChange, 
   selectedTemplate, 
@@ -21,6 +22,7 @@ const [formData, setFormData] = useState({
     price: "",
     keyFeatures: [""],
     images: [],
+    specifications: [],
     ...initialData
   });
 
@@ -130,17 +132,13 @@ useEffect(() => {
       handleInputChange("keyFeatures", newFeatures);
     }
   };
-<div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Product Images
-          </label>
-          <ImageUpload
-            images={formData.images}
-            onChange={handleImageChange}
-            maxImages={5}
-          />
-        </div>
-const validateForm = () => {
+const handleSpecificationsChange = (specifications) => {
+    const updatedData = { ...formData, specifications };
+    setFormData(updatedData);
+    onFormChange?.(updatedData);
+  };
+
+  const validateForm = () => {
     const newErrors = {};
     
     if (!formData.productName?.trim()) {
@@ -158,8 +156,9 @@ const validateForm = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-return (
-<div className="space-y-6">
+
+  return (
+    <div className="space-y-6">
       {showCustomizer && (
         <TemplateCustomizer
           selectedTemplate={selectedTemplate}
@@ -338,6 +337,11 @@ return (
                 ))}
               </AnimatePresence>
             </div>
+
+            <SpecificationsBuilder
+              specifications={formData.specifications}
+              onChange={handleSpecificationsChange}
+            />
 
             <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">

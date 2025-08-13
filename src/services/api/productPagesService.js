@@ -28,6 +28,7 @@ async create(item) {
       ...item,
       Id: maxId + 1,
       images: item.images || [],
+      specifications: item.specifications || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -46,6 +47,7 @@ async update(id, data) {
       ...data,
       Id: parseInt(id),
       images: data.images || this.data[index].images || [],
+      specifications: data.specifications || this.data[index].specifications || [],
       updatedAt: new Date().toISOString()
     };
     this.data[index] = updatedItem;
