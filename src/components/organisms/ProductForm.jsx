@@ -47,7 +47,7 @@ useEffect(() => {
   }, [formData, onFormChange]);
 
 const handleUrlScan = async () => {
-    if (!urlScannerData.url?.trim()) {
+    if (!(urlScannerData.url && typeof urlScannerData.url === 'string' && urlScannerData.url.trim())) {
       return;
     }
     setUrlScannerData(prev => ({ ...prev, isScanning: true }));
@@ -88,7 +88,7 @@ setUrlScannerData(prev => ({
   };
 
 const handleUrlChange = (value) => {
-    setUrlScannerData(prev => ({ ...prev, url: value || "" }));
+    setUrlScannerData(prev => ({ ...prev, url: typeof value === 'string' ? value : String(value || '') }));
   };
 
   const isValidUrl = (url) => {
@@ -240,7 +240,7 @@ const handleExport = () => {
                 </div>
 <Button
                   onClick={handleUrlScan}
-                  disabled={!urlScannerData.url?.trim() || !isValidUrl(urlScannerData.url || "") || urlScannerData.isScanning}
+                  disabled={!(urlScannerData.url && typeof urlScannerData.url === 'string' && urlScannerData.url.trim()) || !isValidUrl(urlScannerData.url || "") || urlScannerData.isScanning}
                   variant="outline"
                   className={urlScannerData.isScanning ? "animate-pulse" : ""}
                 >
