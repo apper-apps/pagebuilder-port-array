@@ -157,6 +157,29 @@ return { success: true };
         ]
       };
     }
+// Enhanced error handling for sitemap-extracted URLs
+    if (url.includes('/products/') || url.includes('/product/') || url.includes('/shop/')) {
+      // For sitemap URLs, provide basic information extraction
+      const urlParts = url.split('/');
+      const productSlug = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
+      
+      if (productSlug) {
+        const title = productSlug
+          .replace(/[-_]/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase())
+          .replace(/\.(html?|php)$/i, '');
+          
+        return {
+          title: title || 'Imported Product',
+          description: `Product imported from ${new URL(url).hostname}`,
+          image: '',
+          price: '',
+          category: 'Imported',
+          brand: new URL(url).hostname.replace('www.', ''),
+          availability: 'unknown'
+        };
+      }
+    }
 
     // If URL doesn't match any pattern, return error
     throw new Error("Unable to extract product information from this URL. Please try a different product page or enter details manually.");

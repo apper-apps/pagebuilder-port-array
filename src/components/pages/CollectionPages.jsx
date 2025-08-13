@@ -4,6 +4,7 @@ import collectionsService from '@/services/api/collectionsService';
 import productPagesService from '@/services/api/productPagesService';
 import CreateCollectionPage from '@/components/organisms/CreateCollectionPage';
 import CollectionCard from '@/components/molecules/CollectionCard';
+import SitemapModal from '@/components/organisms/SitemapModal';
 import Empty from "@/components/ui/Empty";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
@@ -12,11 +13,12 @@ import Button from '@/components/atoms/Button';
 import Modal from '@/components/atoms/Modal';
 import { toast } from 'react-toastify';
 const CollectionPages = () => {
-  const [collections, setCollections] = useState([]);
+const [collections, setCollections] = useState([]);
   const [productPages, setProductPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const [showSitemapModal, setShowSitemapModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ open: false, collection: null });
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const CollectionPages = () => {
     }
   };
 
-  const getProductCount = (collection) => {
+const getProductCount = (collection) => {
     return collection.productIds?.length || 0;
   };
 
@@ -55,9 +57,21 @@ const CollectionPages = () => {
     setShowCreateCollection(true);
   };
 
+  const handleSitemapImport = () => {
+    setShowSitemapModal(true);
+  };
+
   const handleBackFromCreate = () => {
     setShowCreateCollection(false);
     loadCollections(); // Refresh the list
+  };
+
+  const handleSitemapImportComplete = (importedCollections) => {
+    setShowSitemapModal(false);
+    if (importedCollections && importedCollections.length > 0) {
+      loadCollections(); // Refresh the list
+      toast.success(`Successfully imported ${importedCollections.length} collection(s) from sitemap`);
+    }
   };
 
   const handleEditCollection = (collection) => {
@@ -152,9 +166,14 @@ const CollectionPages = () => {
             Create beautiful collection pages to showcase multiple products
           </p>
         </div>
-        <Button onClick={handleCreateCollection} icon="Plus">
-          Create New Collection
-        </Button>
+<div className="flex gap-3">
+          <Button onClick={handleSitemapImport} variant="secondary" icon="Upload">
+            Import from Sitemap
+          </Button>
+          <Button onClick={handleCreateCollection} icon="Plus">
+            Create New Collection
+          </Button>
+        </div>
       </div>
 
 {collections.length === 0 ? (
@@ -258,7 +277,11 @@ const CollectionPages = () => {
           </div>
         </div>
       </div>
-
+<SitemapModal
+        isOpen={showSitemapModal}
+        onClose={() => setShowSitemapModal(false)}
+        onImportComplete={handleSitemapImportComplete}
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
