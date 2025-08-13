@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import productPagesService from "@/services/api/productPagesService";
 import TemplateSelector from "@/components/organisms/TemplateSelector";
+import contentGenerationService from "@/services/api/contentGenerationService";
 import ProductForm from "@/components/organisms/ProductForm";
 import ProductPreview from "@/components/molecules/ProductPreview";
 import Button from "@/components/atoms/Button";
@@ -18,11 +19,17 @@ const [formData, setFormData] = useState({
     description: "",
     price: "",
     keyFeatures: [""],
-    images: []
+    images: [],
+    generatedContent: {
+      seoDescription: "",
+      featureSections: [],
+      useCases: [],
+      sellingPoints: []
+    }
   });
   const [showTemplateModal, setShowTemplateModal] = useState(true);
   const [saving, setSaving] = useState(false);
-
+  const [generating, setGenerating] = useState(false);
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
     setCurrentStep("details");
@@ -70,6 +77,7 @@ const pageData = {
           dataUrl: img.dataUrl,
           isPrimary: img.isPrimary
         })),
+        generatedContent: formData.generatedContent,
         status: status,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -97,6 +105,33 @@ const isFormValid = () => {
     );
   };
 
+  const handleGenerateContent = async () => {
+    if (!formData.productName.trim() || !formData.description.trim()) {
+      toast.error("Please fill in product name and description first");
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const generatedContent = await contentGenerationService.generateContent({
+        productName: formData.productName,
+        description: formData.description,
+        price: formData.price,
+        keyFeatures: formData.keyFeatures.filter(f => f.trim())
+      });
+
+      setFormData(prev => ({
+        ...prev,
+        generatedContent
+      }));
+      
+      toast.success("Content generated successfully! Review and edit as needed.");
+    } catch (error) {
+      toast.error("Failed to generate content. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -144,7 +179,7 @@ const isFormValid = () => {
           animate={{ opacity: 1, y: 0 }}
           className="grid lg:grid-cols-2 gap-8"
         >
-          <div className="space-y-6">
+<div className="space-y-6">
             <div className="bg-white rounded-xl border p-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-primary/10 p-2 rounded-lg">
@@ -160,6 +195,8 @@ const isFormValid = () => {
                 onFormChange={handleFormChange}
                 selectedTemplate={selectedTemplate}
                 initialData={formData}
+                onGenerateContent={handleGenerateContent}
+                generating={generating}
               />
             </div>
           </div>

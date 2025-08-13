@@ -3,11 +3,11 @@ import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
 const ProductPreview = ({ formData, template = "basic" }) => {
-  const { productName, description, price, keyFeatures = [], images = [] } = formData;
+  const { productName, description, price, keyFeatures = [], images = [], generatedContent = {} } = formData;
   const primaryImage = images.find(img => img.isPrimary) || images[0];
 
-  const BasicTemplate = () => (
-<div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+const BasicTemplate = () => (
+    <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
       <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
         {primaryImage ? (
           <img 
@@ -34,13 +34,27 @@ const ProductPreview = ({ formData, template = "basic" }) => {
           </span>
         </div>
         
+        {/* SEO Description or Regular Description */}
         <div className="prose prose-sm max-w-none mb-6">
           <p className="text-gray-700">
-            {description || "Product description will appear here. Add your compelling product details to engage customers."}
+            {generatedContent.seoDescription || description || "Product description will appear here. Add your compelling product details to engage customers."}
           </p>
         </div>
         
-        {keyFeatures.length > 0 && (
+        {/* Generated Feature Sections or Key Features */}
+        {generatedContent.featureSections && generatedContent.featureSections.length > 0 ? (
+          <div className="mb-6">
+            <h3 className="font-semibold text-gray-900 mb-4">Features & Benefits</h3>
+            <div className="space-y-4">
+              {generatedContent.featureSections.map((section, index) => (
+                <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-2">{section.title}</h4>
+                  <p className="text-gray-700 text-sm">{section.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : keyFeatures.length > 0 && (
           <div className="mb-6">
             <h3 className="font-semibold text-gray-900 mb-3">Key Features</h3>
             <ul className="space-y-2">
@@ -48,6 +62,36 @@ const ProductPreview = ({ formData, template = "basic" }) => {
                 <li key={index} className="flex items-start gap-2">
                   <ApperIcon name="Check" size={16} className="text-emerald-500 mt-0.5" />
                   <span className="text-gray-700">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Use Cases */}
+        {generatedContent.useCases && generatedContent.useCases.length > 0 && (
+          <div className="mb-6">
+            <h3 className="font-semibold text-gray-900 mb-3">Perfect For</h3>
+            <div className="grid gap-3">
+              {generatedContent.useCases.map((useCase, index) => (
+                <div key={index} className="border border-gray-200 p-3 rounded-lg">
+                  <h4 className="font-medium text-gray-900 text-sm mb-1">{useCase.title}</h4>
+                  <p className="text-gray-600 text-sm">{useCase.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Key Selling Points */}
+        {generatedContent.sellingPoints && generatedContent.sellingPoints.length > 0 && (
+          <div className="mb-6">
+            <h3 className="font-semibold text-gray-900 mb-3">Why Choose This Product</h3>
+            <ul className="space-y-2">
+              {generatedContent.sellingPoints.map((point, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <ApperIcon name="Star" size={16} className="text-yellow-500 mt-0.5" />
+                  <span className="text-gray-700 text-sm">{point}</span>
                 </li>
               ))}
             </ul>
@@ -62,7 +106,7 @@ const ProductPreview = ({ formData, template = "basic" }) => {
   );
 
   const AdvancedTemplate = () => (
-    <div className="bg-white rounded-xl border shadow-lg overflow-hidden">
+<div className="bg-white rounded-xl border shadow-lg overflow-hidden">
       <div className="bg-gradient-primary p-6 text-white">
         <div className="flex items-center gap-2 mb-2">
           <ApperIcon name="Star" size={16} className="text-yellow-300" />
@@ -72,12 +116,12 @@ const ProductPreview = ({ formData, template = "basic" }) => {
           {productName || "Premium Product Name"}
         </h1>
         <p className="opacity-90">
-          {description || "Premium product description with compelling value proposition."}
+          {generatedContent.seoDescription || description || "Premium product description with compelling value proposition."}
         </p>
       </div>
       
       <div className="p-6">
-<div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             {/* Primary Image */}
             <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
@@ -109,6 +153,21 @@ const ProductPreview = ({ formData, template = "basic" }) => {
                 ))}
               </div>
             )}
+
+            {/* Use Cases in Advanced Template */}
+            {generatedContent.useCases && generatedContent.useCases.length > 0 && (
+              <div className="mt-6">
+                <h3 className="font-semibold text-gray-900 mb-3">Use Cases</h3>
+                <div className="space-y-3">
+                  {generatedContent.useCases.map((useCase, index) => (
+                    <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-lg border border-blue-100">
+                      <h4 className="font-medium text-blue-900 text-sm mb-1">{useCase.title}</h4>
+                      <p className="text-blue-800 text-xs">{useCase.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="space-y-6">
@@ -125,8 +184,28 @@ const ProductPreview = ({ formData, template = "basic" }) => {
                 ${price || "0.00"}
               </div>
             </div>
-            
-            {keyFeatures.length > 0 && (
+
+            {/* Generated Feature Sections or Key Features */}
+            {generatedContent.featureSections && generatedContent.featureSections.length > 0 ? (
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-3">Premium Features</h3>
+                <div className="space-y-3">
+                  {generatedContent.featureSections.map((section, index) => (
+                    <div key={index} className="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                      <div className="flex items-start gap-3">
+                        <div className="bg-emerald-100 p-1 rounded-full">
+                          <ApperIcon name="Check" size={14} className="text-emerald-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-emerald-900 text-sm">{section.title}</h4>
+                          <p className="text-emerald-800 text-xs mt-1">{section.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : keyFeatures.length > 0 && (
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3">What You Get</h3>
                 <ul className="space-y-3">
@@ -139,6 +218,21 @@ const ProductPreview = ({ formData, template = "basic" }) => {
                     </li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {/* Key Selling Points */}
+            {generatedContent.sellingPoints && generatedContent.sellingPoints.length > 0 && (
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-3">Why Choose This</h3>
+                <div className="space-y-2">
+                  {generatedContent.sellingPoints.slice(0, 3).map((point, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <ApperIcon name="Star" size={14} className="text-yellow-500 mt-1" />
+                      <span className="text-gray-700 text-sm">{point}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             
@@ -154,6 +248,20 @@ const ProductPreview = ({ formData, template = "basic" }) => {
             </div>
           </div>
         </div>
+
+        {/* Additional selling points at bottom */}
+        {generatedContent.sellingPoints && generatedContent.sellingPoints.length > 3 && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="grid md:grid-cols-2 gap-3">
+              {generatedContent.sellingPoints.slice(3).map((point, index) => (
+                <div key={index + 3} className="flex items-start gap-2 bg-gray-50 p-3 rounded-lg">
+                  <ApperIcon name="Shield" size={14} className="text-primary mt-0.5" />
+                  <span className="text-gray-700 text-sm">{point}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Textarea from "@/components/atoms/Textarea";
 import ImageUpload from "@/components/atoms/ImageUpload";
 import Input from "@/components/atoms/Input";
-import Textarea from "@/components/atoms/Textarea";
-import Button from "@/components/atoms/Button";
-import ApperIcon from "@/components/ApperIcon";
 
 const ProductForm = ({ onFormChange, selectedTemplate, initialData = {} }) => {
+
 const [formData, setFormData] = useState({
     productName: "",
     description: "",
@@ -23,13 +24,16 @@ const [formData, setFormData] = useState({
   });
 
   const [errors, setErrors] = useState({});
-const handleImageChange = (images) => {
+
+  const handleImageChange = (images) => {
     const updatedData = { ...formData, images };
     setFormData(updatedData);
     onFormChange && onFormChange(updatedData);
   };
 useEffect(() => {
-    onFormChange(formData);
+    if (onFormChange) {
+      onFormChange(formData);
+    }
   }, [formData, onFormChange]);
 
   const handleUrlScan = async () => {
@@ -119,20 +123,24 @@ useEffect(() => {
       handleInputChange("keyFeatures", newFeatures);
     }
   };
-<ImageUpload
-          images={formData.images}
-          onChange={handleImageChange}
-          maxImages={5}
-          error={formData.images?.length === 0 ? "At least one product image is required" : ""}
-        />
-  const validateForm = () => {
+<div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Product Images
+          </label>
+          <ImageUpload
+            images={formData.images}
+            onChange={handleImageChange}
+            maxImages={5}
+          />
+        </div>
+const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.productName.trim()) {
+    if (!formData.productName?.trim()) {
       newErrors.productName = "Product name is required";
     }
     
-    if (!formData.description.trim()) {
+    if (!formData.description?.trim()) {
       newErrors.description = "Product description is required";
     }
     
@@ -143,21 +151,20 @@ useEffect(() => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-4">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4">
         <div className="flex items-center gap-3">
           <div className="bg-white p-2 rounded-lg">
             <ApperIcon 
               name={selectedTemplate?.type === "advanced" ? "Crown" : "Package"} 
               size={20} 
-              className="text-primary"
+              className="text-blue-600"
             />
           </div>
           <div>
             <h3 className="font-medium text-gray-900">
-              {selectedTemplate?.name || "Template"}
+              {selectedTemplate?.name || "Product Template"}
             </h3>
             <p className="text-sm text-gray-600">
               Fill in your product details below
@@ -184,7 +191,7 @@ return (
               <Input
                 placeholder="Paste product URL here (e.g., https://amazon.com/product-url)"
                 value={urlScannerData.url}
-                onChange={(e) => handleUrlChange(e.target.value)}
+                onChange={(value) => handleUrlChange(value)}
                 disabled={urlScannerData.isScanning}
                 className={!isValidUrl(urlScannerData.url) && urlScannerData.url ? "border-red-300 focus:border-red-500 focus:ring-red-200" : ""}
               />
@@ -192,10 +199,20 @@ return (
             <Button
               onClick={handleUrlScan}
               disabled={!urlScannerData.url.trim() || !isValidUrl(urlScannerData.url) || urlScannerData.isScanning}
-              icon={urlScannerData.isScanning ? "Loader" : "Search"}
+              variant="outline"
               className={urlScannerData.isScanning ? "animate-pulse" : ""}
             >
-              {urlScannerData.isScanning ? "Scanning..." : "Scan URL"}
+              {urlScannerData.isScanning ? (
+                <>
+                  <ApperIcon name="Loader" size={16} className="animate-spin" />
+                  Scanning...
+                </>
+              ) : (
+                <>
+                  <ApperIcon name="Search" size={16} />
+                  Scan URL
+                </>
+              )}
             </Button>
           </div>
 
@@ -224,12 +241,13 @@ return (
           </div>
         </div>
       </div>
+
       <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <Input
           label="Product Name"
           placeholder="Enter your product name"
           value={formData.productName}
-          onChange={(e) => handleInputChange("productName", e.target.value)}
+          onChange={(value) => handleInputChange("productName", value)}
           error={errors.productName}
           required
         />
@@ -238,7 +256,7 @@ return (
           label="Product Description"
           placeholder="Describe your product and its benefits..."
           value={formData.description}
-          onChange={(e) => handleInputChange("description", e.target.value)}
+          onChange={(value) => handleInputChange("description", value)}
           error={errors.description}
           rows={4}
           required
@@ -250,10 +268,11 @@ return (
           step="0.01"
           placeholder="0.00"
           value={formData.price}
-          onChange={(e) => handleInputChange("price", e.target.value)}
+          onChange={(value) => handleInputChange("price", value)}
+          prefix="$"
           error={errors.price}
           required
-/>
+        />
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -261,12 +280,12 @@ return (
               Key Features
             </label>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={addFeature}
-              icon="Plus"
               type="button"
             >
+              <ApperIcon name="Plus" size={16} />
               Add Feature
             </Button>
           </div>
@@ -283,23 +302,35 @@ return (
                 <Input
                   placeholder={`Feature ${index + 1}`}
                   value={feature}
-                  onChange={(e) => handleFeatureChange(index, e.target.value)}
+                  onChange={(value) => handleFeatureChange(index, value)}
                   className="flex-1"
                 />
                 
                 {formData.keyFeatures.length > 1 && (
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={() => removeFeature(index)}
-                    icon="X"
                     type="button"
                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  />
+                  >
+                    <ApperIcon name="X" size={16} />
+                  </Button>
                 )}
               </motion.div>
             ))}
           </AnimatePresence>
+        </div>
+
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Product Images
+          </label>
+          <ImageUpload
+            images={formData.images}
+            onChange={handleImageChange}
+            maxImages={5}
+          />
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4">
