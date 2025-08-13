@@ -5,6 +5,26 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 class TemplatesService {
   constructor() {
     this.data = [...mockData];
+    this.customizations = new Map(); // Store template customizations
+  }
+
+  // Save template customization
+  async saveCustomization(templateId, customization) {
+    await delay(100);
+    this.customizations.set(templateId, customization);
+    return customization;
+  }
+
+  // Get template customization
+  async getCustomization(templateId) {
+    await delay(50);
+    return this.customizations.get(templateId) || null;
+  }
+
+  // Delete template customization
+  async deleteCustomization(templateId) {
+    await delay(50);
+    return this.customizations.delete(templateId);
   }
 
   async getAll() {

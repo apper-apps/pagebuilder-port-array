@@ -7,29 +7,126 @@
     "layout": {
       "sections": [
         "hero",
-        "description",
+        "description", 
         "features",
+        "pricing",
+        "specifications",
+        "images",
+        "social_proof",
         "cta"
       ],
-      "style": "minimal"
+      "style": "minimal",
+      "customizable": true
+    },
+    "sections": {
+      "hero": {
+        "name": "Hero Section",
+        "description": "Main product showcase with primary image",
+        "required": true
+      },
+      "description": {
+        "name": "Product Description",
+        "description": "Detailed product information and benefits", 
+        "required": true
+      },
+      "features": {
+        "name": "Key Features",
+        "description": "Highlight important product features",
+        "required": false
+      },
+      "pricing": {
+        "name": "Pricing & Offers",
+        "description": "Product price and special offers",
+        "required": true
+      },
+      "specifications": {
+        "name": "Specifications",
+        "description": "Technical details and use cases",
+        "required": false
+      },
+      "images": {
+        "name": "Product Images",
+        "description": "Additional product photos",
+        "required": false
+      },
+      "social_proof": {
+        "name": "Social Proof",
+        "description": "Reviews, testimonials, and selling points",
+        "required": false
+      },
+      "cta": {
+        "name": "Call to Action",
+        "description": "Purchase buttons and next steps",
+        "required": true
+      }
     }
   },
   {
     "Id": 2,
     "name": "Advanced High-Ticket Template",
     "type": "advanced",
-    "preview": "/preview-advanced.jpg",
+    "preview": "/preview-advanced.jpg", 
     "layout": {
       "sections": [
         "hero",
         "value_proposition",
         "features",
+        "specifications",
+        "images",
         "social_proof",
         "pricing",
         "guarantee",
         "cta"
       ],
-      "style": "premium"
+      "style": "premium",
+      "customizable": true
+    },
+    "sections": {
+      "hero": {
+        "name": "Hero Section",
+        "description": "Premium product showcase with branding",
+        "required": true
+      },
+      "value_proposition": {
+        "name": "Value Proposition", 
+        "description": "Core benefits and unique selling points",
+        "required": true
+      },
+      "features": {
+        "name": "Premium Features",
+        "description": "Detailed feature breakdown with benefits",
+        "required": true
+      },
+      "specifications": {
+        "name": "Use Cases & Specs",
+        "description": "Technical specifications and use scenarios",
+        "required": false
+      },
+      "images": {
+        "name": "Product Gallery",
+        "description": "Multiple product angles and details",
+        "required": false
+      },
+      "social_proof": {
+        "name": "Social Proof & Trust",
+        "description": "Customer reviews, testimonials, guarantees",
+        "required": true
+      },
+      "pricing": {
+        "name": "Pricing & Offers",
+        "description": "Tiered pricing with special offers",
+        "required": true
+      },
+      "guarantee": {
+        "name": "Money-Back Guarantee",
+        "description": "Risk reversal and guarantee details",
+        "required": false
+      },
+      "cta": {
+        "name": "Call to Action",
+        "description": "Multiple CTA options and urgency",
+        "required": true
+      }
     }
   }
 ]

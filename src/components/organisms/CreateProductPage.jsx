@@ -12,8 +12,9 @@ import { toast } from "react-toastify";
 
 const CreateProductPage = ({ onBack }) => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState("template");
+const [currentStep, setCurrentStep] = useState("template");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [templateCustomization, setTemplateCustomization] = useState(null);
 const [formData, setFormData] = useState({
     productName: "",
     description: "",
@@ -30,10 +31,18 @@ const [formData, setFormData] = useState({
   const [showTemplateModal, setShowTemplateModal] = useState(true);
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const handleTemplateSelect = (template) => {
+const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
-    setCurrentStep("details");
+    setCurrentStep("customize");
     setShowTemplateModal(false);
+  };
+
+  const handleCustomizationChange = (customization) => {
+    setTemplateCustomization(customization);
+  };
+
+  const handleCustomizationComplete = () => {
+    setCurrentStep("details");
   };
 
   const handleFormChange = (data) => {
@@ -67,6 +76,7 @@ if (!formData.productName.trim()) {
 const pageData = {
         name: formData.productName,
         template: selectedTemplate.name,
+        templateCustomization: templateCustomization,
         productName: formData.productName,
         description: formData.description,
         price: parseFloat(formData.price),
@@ -191,9 +201,10 @@ const isFormValid = () => {
                 </div>
               </div>
               
-              <ProductForm
+<ProductForm
                 onFormChange={handleFormChange}
                 selectedTemplate={selectedTemplate}
+                templateCustomization={templateCustomization}
                 initialData={formData}
                 onGenerateContent={handleGenerateContent}
                 generating={generating}
@@ -213,9 +224,10 @@ const isFormValid = () => {
                 </div>
               </div>
               
-              <ProductPreview
+<ProductPreview
                 formData={formData}
                 template={selectedTemplate.type}
+                templateCustomization={templateCustomization}
               />
             </div>
           </div>
