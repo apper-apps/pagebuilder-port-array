@@ -27,7 +27,7 @@ const [formData, setFormData] = useState({
     ...initialData
   });
 
-  const [urlScannerData, setUrlScannerData] = useState({
+const [urlScannerData, setUrlScannerData] = useState({
     url: "",
     isScanning: false,
     lastScannedUrl: null
@@ -46,18 +46,16 @@ useEffect(() => {
     }
   }, [formData, onFormChange]);
 
-  const handleUrlScan = async () => {
-    if (!urlScannerData.url.trim()) {
+const handleUrlScan = async () => {
+    if (!urlScannerData.url?.trim()) {
       return;
     }
-
     setUrlScannerData(prev => ({ ...prev, isScanning: true }));
 
-    try {
+try {
       // Import the service dynamically to avoid circular imports
       const productPagesService = (await import("@/services/api/productPagesService")).default;
-      const extractedData = await productPagesService.scanProductUrl(urlScannerData.url);
-      
+      const extractedData = await productPagesService.scanProductUrl(urlScannerData.url || "");
       // Merge extracted data with existing form data, keeping user edits
       const updatedFormData = {
         productName: extractedData.productName || formData.productName,
@@ -68,10 +66,10 @@ useEffect(() => {
       };
 
       setFormData(updatedFormData);
-      setUrlScannerData(prev => ({ 
+setUrlScannerData(prev => ({ 
         ...prev, 
         isScanning: false, 
-        lastScannedUrl: urlScannerData.url 
+        lastScannedUrl: urlScannerData.url || "" 
       }));
 
       // Show success toast
@@ -89,8 +87,8 @@ useEffect(() => {
     }
   };
 
-  const handleUrlChange = (value) => {
-    setUrlScannerData(prev => ({ ...prev, url: value }));
+const handleUrlChange = (value) => {
+    setUrlScannerData(prev => ({ ...prev, url: value || "" }));
   };
 
   const isValidUrl = (url) => {
@@ -240,9 +238,9 @@ const handleExport = () => {
                     className={!isValidUrl(urlScannerData.url) && urlScannerData.url ? "border-red-300 focus:border-red-500 focus:ring-red-200" : ""}
                   />
                 </div>
-                <Button
+<Button
                   onClick={handleUrlScan}
-                  disabled={!urlScannerData.url.trim() || !isValidUrl(urlScannerData.url) || urlScannerData.isScanning}
+                  disabled={!urlScannerData.url?.trim() || !isValidUrl(urlScannerData.url || "") || urlScannerData.isScanning}
                   variant="outline"
                   className={urlScannerData.isScanning ? "animate-pulse" : ""}
                 >
