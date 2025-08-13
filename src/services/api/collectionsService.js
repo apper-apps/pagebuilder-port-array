@@ -21,13 +21,14 @@ class CollectionsService {
     return { ...item };
   }
 
-  async create(item) {
+async create(item) {
     await delay(400);
     const maxId = Math.max(...this.data.map(item => item.Id), 0);
     const newItem = {
       ...item,
       Id: maxId + 1,
       productIds: item.productIds || [],
+      comparisonCriteria: item.comparisonCriteria || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -35,7 +36,7 @@ class CollectionsService {
     return { ...newItem };
   }
 
-  async update(id, data) {
+async update(id, data) {
     await delay(350);
     const index = this.data.findIndex(item => item.Id === parseInt(id));
     if (index === -1) {
@@ -46,6 +47,7 @@ class CollectionsService {
       ...data,
       Id: parseInt(id),
       productIds: data.productIds || this.data[index].productIds || [],
+      comparisonCriteria: data.comparisonCriteria || this.data[index].comparisonCriteria || [],
       updatedAt: new Date().toISOString()
     };
     this.data[index] = updatedItem;

@@ -5,6 +5,8 @@ import productPagesService from '@/services/api/productPagesService';
 import CreateCollectionPage from '@/components/organisms/CreateCollectionPage';
 import CollectionCard from '@/components/molecules/CollectionCard';
 import SitemapModal from '@/components/organisms/SitemapModal';
+import ComparisonTable from '@/components/organisms/ComparisonTable';
+import ComparisonEditor from '@/components/organisms/ComparisonEditor';
 import Empty from "@/components/ui/Empty";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
@@ -20,6 +22,9 @@ const [collections, setCollections] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [showSitemapModal, setShowSitemapModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ open: false, collection: null });
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'comparison'
+  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [showComparisonEditor, setShowComparisonEditor] = useState(false);
 
   useEffect(() => {
     loadCollections();
@@ -74,10 +79,47 @@ const getProductCount = (collection) => {
     }
   };
 
-  const handleEditCollection = (collection) => {
-    // For now, redirect to create with edit mode
-    // This would typically open an edit modal or navigate to edit page
-    toast.info('Edit functionality coming soon!');
+const handleEditCollection = (collection) => {
+    setSelectedCollection(collection);
+    setShowComparisonEditor(true);
+  };
+
+  const handleViewComparison = (collection) => {
+    setSelectedCollection(collection);
+    setViewMode('comparison');
+  };
+
+  const handleBackFromComparison = () => {
+    setViewMode('list');
+    setSelectedCollection(null);
+  };
+
+  const handleEditComparison = () => {
+    setShowComparisonEditor(true);
+  };
+
+  const handleSaveComparison = async (comparisonData) => {
+    try {
+      let updatedCollection;
+      if (selectedCollection) {
+        // Update existing collection
+        updatedCollection = await collectionsService.update(selectedCollection.Id, comparisonData);
+        setCollections(prev => 
+          prev.map(c => c.Id === selectedCollection.Id ? updatedCollection : c)
+        );
+        setSelectedCollection(updatedCollection);
+        toast.success('Comparison updated successfully!');
+      } else {
+        // Create new collection
+        updatedCollection = await collectionsService.create(comparisonData);
+        setCollections(prev => [...prev, updatedCollection]);
+        toast.success('Comparison created successfully!');
+      }
+      setShowComparisonEditor(false);
+    } catch (error) {
+      toast.error('Failed to save comparison');
+      console.error('Error saving comparison:', error);
+    }
   };
 
   const handleDeleteCollection = (collection) => {
@@ -116,8 +158,19 @@ const getProductCount = (collection) => {
     }
   };
 
-  if (showCreateCollection) {
+if (showCreateCollection) {
     return <CreateCollectionPage onBack={handleBackFromCreate} />;
+  }
+
+  if (viewMode === 'comparison' && selectedCollection) {
+    return (
+      <ComparisonTable
+        collection={selectedCollection}
+        products={productPages}
+        onEdit={handleEditComparison}
+        onBack={handleBackFromComparison}
+      />
+    );
   }
 
   if (loading) {
@@ -170,6 +223,16 @@ const getProductCount = (collection) => {
           <Button onClick={handleSitemapImport} variant="secondary" icon="Upload">
             Import from Sitemap
           </Button>
+          <Button 
+            onClick={() => {
+              setSelectedCollection(null);
+              setShowComparisonEditor(true);
+            }} 
+            variant="secondary" 
+            icon="BarChart3"
+          >
+            Create Comparison
+          </Button>
           <Button onClick={handleCreateCollection} icon="Plus">
             Create New Collection
           </Button>
@@ -196,7 +259,7 @@ const getProductCount = (collection) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {collections.map((collection) => (
+{collections.map((collection) => (
               <CollectionCard
                 key={collection.Id}
                 collection={collection}
@@ -204,6 +267,7 @@ const getProductCount = (collection) => {
                 onEdit={handleEditCollection}
                 onDelete={handleDeleteCollection}
                 onDuplicate={handleDuplicateCollection}
+                onViewComparison={handleViewComparison}
               />
             ))}
           </div>
@@ -247,36 +311,45 @@ const getProductCount = (collection) => {
         </div>
       </Modal>
 
-      <div className="bg-gradient-to-br from-secondary/5 to-primary/5 rounded-xl p-6">
+<div className="bg-gradient-to-br from-secondary/5 to-primary/5 rounded-xl p-6">
         <div className="flex items-start gap-4">
           <div className="bg-white p-3 rounded-xl">
-            <ApperIcon name="Sparkles" size={24} className="text-secondary" />
+            <ApperIcon name="BarChart3" size={24} className="text-secondary" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900 mb-2">
-              What's Coming in Collection Pages
+              Comparison Table Features
             </h3>
             <ul className="text-sm text-gray-600 space-y-2">
               <li className="flex items-center gap-2">
                 <ApperIcon name="Check" size={14} className="text-emerald-500" />
-                <span>Drag & drop collection builder</span>
+                <span>Side-by-side product comparisons</span>
               </li>
               <li className="flex items-center gap-2">
                 <ApperIcon name="Check" size={14} className="text-emerald-500" />
-                <span>Multiple layout templates</span>
+                <span>Customizable comparison criteria</span>
               </li>
               <li className="flex items-center gap-2">
                 <ApperIcon name="Check" size={14} className="text-emerald-500" />
-                <span>Smart product filtering</span>
+                <span>Mobile-responsive design</span>
               </li>
               <li className="flex items-center gap-2">
                 <ApperIcon name="Check" size={14} className="text-emerald-500" />
-                <span>Automated product recommendations</span>
+                <span>Highlight key differentiators</span>
               </li>
             </ul>
           </div>
         </div>
       </div>
+
+      {/* Comparison Editor Modal */}
+      <ComparisonEditor
+        isOpen={showComparisonEditor}
+        onClose={() => setShowComparisonEditor(false)}
+        onSave={handleSaveComparison}
+        collection={selectedCollection}
+        availableProducts={productPages}
+      />
 <SitemapModal
         isOpen={showSitemapModal}
         onClose={() => setShowSitemapModal(false)}
