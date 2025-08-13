@@ -1,0 +1,24 @@
+[
+  {
+    "Id": 1,
+    "name": "Best Wireless Headphones 2024",
+    "template": "Wirecutter-style Comparison",
+    "title": "Best Wireless Headphones 2024",
+    "description": "We tested over 50 wireless headphones to find the best options for every budget and use case. Here are our top picks after months of rigorous testing.",
+    "productIds": [1, 2],
+    "status": "published",
+    "createdAt": "2024-01-20T10:30:00Z",
+    "updatedAt": "2024-01-22T14:45:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Photography Essentials",
+    "template": "Popular Collection",
+    "title": "Photography Essentials Collection",
+    "description": "Everything you need to start your photography journey. Curated by professional photographers and tested in real-world conditions.",
+    "productIds": [4],
+    "status": "draft",
+    "createdAt": "2024-01-18T15:20:00Z",
+    "updatedAt": "2024-01-18T15:20:00Z"
+  }
+]

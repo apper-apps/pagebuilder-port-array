@@ -1,25 +1,46 @@
-import { useState } from "react";
-import Modal from "@/components/atoms/Modal";
+import React, { useState } from "react";
 import TemplateCard from "@/components/molecules/TemplateCard";
 import Button from "@/components/atoms/Button";
+import Modal from "@/components/atoms/Modal";
 
-const TemplateSelector = ({ isOpen, onClose, onSelectTemplate }) => {
+const TemplateSelector = ({ isOpen, onClose, onSelectTemplate, mode }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   
-  const templates = [
+const productTemplates = [
     {
       id: "basic",
       name: "Basic Product Template",
       type: "basic",
+      description: "Perfect for simple product pages with essential information",
       preview: "/preview-basic.jpg"
     },
     {
       id: "advanced",
       name: "Advanced High-Ticket Template",
       type: "advanced",
+      description: "Comprehensive template for premium products with detailed features",
       preview: "/preview-advanced.jpg"
     }
   ];
+
+  const collectionTemplates = [
+    {
+      id: "wirecutter",
+      name: "Wirecutter-style Comparison",
+      type: "comparison",
+      description: "Side-by-side product comparisons with detailed analysis and recommendations",
+      preview: "/preview-comparison.jpg"
+    },
+    {
+      id: "popular",
+      name: "Popular Collection",
+      type: "gallery",
+      description: "Showcase curated products in an attractive gallery format",
+      preview: "/preview-gallery.jpg"
+    }
+  ];
+
+  const templates = mode === "collection" ? collectionTemplates : productTemplates;
 
   const handleContinue = () => {
     if (selectedTemplate) {
