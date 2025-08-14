@@ -169,14 +169,16 @@ return { success: true };
           .replace(/\b\w/g, l => l.toUpperCase())
           .replace(/\.(html?|php)$/i, '');
           
-        return {
-          title: title || 'Imported Product',
+return {
+          productName: title || 'Imported Product',
           description: `Product imported from ${new URL(url).hostname}`,
-          image: '',
           price: '',
-          category: 'Imported',
-          brand: new URL(url).hostname.replace('www.', ''),
-          availability: 'unknown'
+          keyFeatures: [
+            `Imported from ${new URL(url).hostname.replace('www.', '')}`,
+            'Category: Imported',
+            'Availability: Unknown'
+          ],
+          images: []
         };
       }
     }

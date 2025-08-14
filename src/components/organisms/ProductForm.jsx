@@ -88,7 +88,10 @@ setUrlScannerData(prev => ({
   };
 
 const handleUrlChange = (value) => {
-    setUrlScannerData(prev => ({ ...prev, url: typeof value === 'string' ? value : String(value || '') }));
+    // Only accept string values for URL input
+    if (typeof value === 'string') {
+      setUrlScannerData(prev => ({ ...prev, url: value }));
+    }
   };
 
   const isValidUrl = (url) => {
